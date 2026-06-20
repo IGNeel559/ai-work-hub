@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ศูนย์ผู้ช่วย AI อัจฉริยะ</title>
+  <meta name="description" content="ผู้ช่วยทำงานอัตโนมัติสำหรับงานเอกสาร IT และการจัดการข้อมูล" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===== ONBOARDING WIZARD ===== -->
+<div id="onboarding-overlay" class="onboarding-overlay hidden">
+  <div class="onboarding-card">
+    <div class="onboarding-progress">
+      <div class="progress-bar"><div class="progress-fill" id="onboarding-progress-fill"></div></div>
+      <span class="progress-text" id="onboarding-step-text">ขั้นตอน 1 / 5</span>
+    </div>
+    <div class="onboarding-steps">
+      <!-- Step 1: Welcome -->
+      <div class="onboarding-step active" data-step="1">
+        <div class="onboarding-icon">🤖</div>
+        <h2>ยินดีต้อนรับสู่<br/><span class="gradient-text">ศูนย์ผู้ช่วย AI อัจฉริยะ</span></h2>
+        <p>ผู้ช่วยทำงานอัตโนมัติสำหรับงานเอกสาร IT และการจัดการข้อมูล ระบบจะช่วยให้คุณทำงานได้ฉลาดขึ้น เร็วขึ้น</p>
+        <div class="feature-list">
+          <div class="feature-item"><span>🧠</span><span>AI หลายผู้ให้บริการ</span></div>
+          <div class="feature-item"><span>📝</span><span>จัดการงานและโน้ต</span></div>
+          <div class="feature-item"><span>📚</span><span>คลังความรู้ส่วนตัว</span></div>
+          <div class="feature-item"><span>🔒</span><span>ข้อมูลเก็บในเครื่องคุณ</span></div>
+        </div>
+      </div>
+      <!-- Step 2: Provider -->
+      <div class="onboarding-step" data-step="2">
+        <div class="onboarding-icon">⚡</div>
+        <h2>เลือก <span class="gradient-text">AI Provider</span></h2>
+        <p>เลือกผู้ให้บริการ AI ที่คุณต้องการใช้งานเป็นหลัก</p>
+        <div class="provider-grid">
+          <div class="provider-card active" data-provider="claude">
+            <div class="provider-logo">🟠</div>
+            <div class="provider-name">Claude</div>
+            <div class="provider-desc">Anthropic • แนะนำ</div>
+          </div>
+          <div class="provider-card" data-provider="openai">
+            <div class="provider-logo">⚫</div>
+            <div class="provider-name">OpenAI</div>
+            <div class="provider-desc">GPT-4o</div>
+          </div>
+          <div class="provider-card" data-provider="gemini">
+            <div class="provider-logo">🔵</div>
+            <div class="provider-name">Gemini</div>
+            <div class="provider-desc">Google</div>
+          </div>
+          <div class="provider-card" data-provider="deepseek">
+            <div class="provider-logo">🐋</div>
+            <div class="provider-name">DeepSeek</div>
+            <div class="provider-desc">ราคาประหยัด</div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 3: API Key -->
+      <div class="onboarding-step" data-step="3">
+        <div class="onboarding-icon">🔑</div>
+        <h2>ใส่ <span class="gradient-text">API Key</span></h2>
+        <p>กรอก API Key ของผู้ให้บริการที่เลือก ข้อมูลจะเก็บในเครื่องของคุณเท่านั้น</p>
+        <div class="form-group">
+          <label id="onboarding-key-label">Claude API Key</label>
+          <div class="input-with-icon">
+            <input type="password" id="onboarding-api-key" placeholder="sk-ant-api03-..." class="form-input" />
+            <button class="btn-icon" onclick="togglePasswordVisibility('onboarding-api-key')">👁</button>
+          </div>
+          <div class="input-hint">
+            <span id="onboarding-key-hint">รับ API Key ได้ที่ console.anthropic.com</span>
+          </div>
+        </div>
+      </div>
+      <!-- Step 4: Test -->
+      <div class="onboarding-step" data-step="4">
+        <div class="onboarding-icon">🧪</div>
+        <h2>ทดสอบ <span class="gradient-text">การเชื่อมต่อ</span></h2>
+        <p>ตรวจสอบว่า API Key ของคุณทำงานได้ถูกต้อง</p>
+        <div id="connection-test-status" class="connection-test">
+          <div class="test-item" id="test-key-format">
+            <span class="test-icon">⏳</span>
+            <span>ตรวจสอบรูปแบบ Key</span>
+          </div>
+          <div class="test-item" id="test-connection">
+            <span class="test-icon">⏳</span>
+            <span>ทดสอบการเชื่อมต่อ</span>
+          </div>
+          <div class="test-item" id="test-response">
+            <span class="test-icon">⏳</span>
+            <span>รับการตอบกลับ</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="run-test-btn" onclick="runConnectionTest()">🚀 ทดสอบการเชื่อมต่อ</button>
+      </div>
+      <!-- Step 5: Done -->
+      <div class="onboarding-step" data-step="5">
+        <div class="onboarding-icon success-bounce">🎉</div>
+        <h2>พร้อมใช้งานแล้ว!</h2>
+        <p>ระบบตั้งค่าเสร็จสมบูรณ์ คุณสามารถเริ่มใช้งาน AI ได้ทันที</p>
+        <div class="quick-starts">
+          <div class="quick-start-item" onclick="completeOnboarding('chat')">
+            <span>💬</span><span>เริ่มแชทกับ AI</span>
+          </div>
+          <div class="quick-start-item" onclick="completeOnboarding('agents')">
+            <span>🤖</span><span>เลือกผู้ช่วย AI</span>
+          </div>
+          <div class="quick-start-item" onclick="completeOnboarding('home')">
+            <span>🏠</span><span>ไปที่หน้าหลัก</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" id="onboarding-back" onclick="onboardingBack()" style="display:none">← ย้อนกลับ</button>
+      <button class="btn btn-primary" id="onboarding-next" onclick="onboardingNext()">ถัดไป →</button>
+      <button class="btn btn-ghost" id="onboarding-skip" onclick="skipOnboarding()">ข้ามสำหรับตอนนี้</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST NOTIFICATIONS ===== -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ===== GLOBAL SEARCH MODAL ===== -->
+<div id="search-modal" class="modal-overlay hidden">
+  <div class="modal search-modal">
+    <div class="search-modal-header">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="global-search-input" placeholder="ค้นหา... (หน้า, แชท, โน้ต, งาน)" oninput="handleGlobalSearch(this.value)" />
+      <kbd>ESC</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <div class="search-category">
+        <div class="search-cat-label">หน้าหลัก</div>
+        <div id="search-results-pages"></div>
+      </div>
+      <div class="search-category">
+        <div class="search-cat-label">แชท</div>
+        <div id="search-results-chats"></div>
+      </div>
+      <div class="search-category">
+        <div class="search-cat-label">โน้ต</div>
+        <div id="search-results-notes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP LAYOUT ===== -->
+<div id="app" class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo" onclick="navigateTo('home')">
+        <div class="logo-icon">🤖</div>
+        <div class="logo-text">
+          <div class="logo-title">AI อัจฉริยะ</div>
+          <div class="logo-sub">Smart Workspace</div>
+        </div>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="ย่อ/ขยาย Sidebar">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.854 3.646a.5.5 0 0 1 0 .708L8.207 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0zM4.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 1 0v-13a.5.5 0 0 0-.5-.5z"/></svg>
+      </button>
+    </div>
+
+    <div class="sidebar-search">
+      <button class="sidebar-search-btn" onclick="openSearch()">
+        <span>🔍</span><span class="sidebar-search-text">ค้นหา...</span><kbd class="sidebar-kbd">⌘K</kbd>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">หลัก</div>
+        <a class="nav-item active" data-page="home" onclick="navigateTo('home')">
+          <span class="nav-icon">🏠</span><span class="nav-label">หน้าหลัก</span>
+        </a>
+        <a class="nav-item" data-page="chat" onclick="navigateTo('chat')">
+          <span class="nav-icon">🤖</span><span class="nav-label">AI แชท</span>
+          <span class="nav-badge" id="chat-badge"></span>
+        </a>
+        <a class="nav-item" data-page="agents" onclick="navigateTo('agents')">
+          <span class="nav-icon">🧠</span><span class="nav-label">ผู้ช่วย AI</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Google Workspace</div>
+        <a class="nav-item" data-page="gmail" onclick="navigateTo('gmail')">
+          <span class="nav-icon">📧</span><span class="nav-label">Gmail</span>
+        </a>
+        <a class="nav-item" data-page="drive" onclick="navigateTo('drive')">
+          <span class="nav-icon">☁️</span><span class="nav-label">Google Drive</span>
+        </a>
+        <a class="nav-item" data-page="calendar" onclick="navigateTo('calendar')">
+          <span class="nav-icon">📅</span><span class="nav-label">ปฏิทินงาน</span>
+        </a>
+        <a class="nav-item" data-page="sheets" onclick="navigateTo('sheets')">
+          <span class="nav-icon">📊</span><span class="nav-label">Google Sheets</span>
+        </a>
+        <a class="nav-item" data-page="photos" onclick="navigateTo('photos')">
+          <span class="nav-icon">📸</span><span class="nav-label">Google Photos</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">จัดการงาน</div>
+        <a class="nav-item" data-page="tasks" onclick="navigateTo('tasks')">
+          <span class="nav-icon">✅</span><span class="nav-label">งานของฉัน</span>
+          <span class="nav-badge" id="tasks-badge"></span>
+        </a>
+        <a class="nav-item" data-page="notes" onclick="navigateTo('notes')">
+          <span class="nav-icon">📝</span><span class="nav-label">โน้ต</span>
+        </a>
+        <a class="nav-item" data-page="knowledge" onclick="navigateTo('knowledge')">
+          <span class="nav-icon">📚</span><span class="nav-label">คลังความรู้</span>
+        </a>
+        <a class="nav-item" data-page="prompts" onclick="navigateTo('prompts')">
+          <span class="nav-icon">📂</span><span class="nav-label">คลัง Prompt</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">วิเคราะห์</div>
+        <a class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')">
+          <span class="nav-icon">📈</span><span class="nav-label">แดชบอร์ด</span>
+        </a>
+        <a class="nav-item" data-page="tokens" onclick="navigateTo('tokens')">
+          <span class="nav-icon">💰</span><span class="nav-label">การใช้งาน Token</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">ระบบ</div>
+        <a class="nav-item" data-page="settings" onclick="navigateTo('settings')">
+          <span class="nav-icon">⚙️</span><span class="nav-label">ตั้งค่าระบบ</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="api-status-bar" id="api-status-bar">
+        <span class="status-dot" id="status-dot">🔴</span>
+        <span class="status-text sidebar-search-text" id="status-text">ไม่ได้เชื่อมต่อ</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-wrapper">
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <div class="breadcrumb" id="breadcrumb">
+          <span>🏠</span><span>หน้าหลัก</span>
+        </div>
+      </div>
+      <div class="header-center">
+        <button class="header-search-btn" onclick="openSearch()">
+          <span>🔍</span><span>ค้นหา...</span><kbd>⌘K</kbd>
+        </button>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" onclick="toggleTheme()" title="สลับธีม" id="theme-btn">🌙</button>
+        <button class="header-btn" id="notif-btn" onclick="toggleNotifications()" title="การแจ้งเตือน">
+          🔔<span class="notif-dot" id="notif-dot"></span>
+        </button>
+        <div class="user-menu" onclick="toggleUserMenu()">
+          <div class="user-avatar">AI</div>
+          <div class="user-info">
+            <div class="user-name">ผู้ใช้งาน</div>
+            <div class="user-role">Admin</div>
+          </div>
+          <span>▾</span>
+        </div>
+        <div class="user-dropdown hidden" id="user-dropdown">
+          <div class="dropdown-item" onclick="navigateTo('settings')">⚙️ ตั้งค่าระบบ</div>
+          <div class="dropdown-item" onclick="navigateTo('tokens')">💰 การใช้งาน Token</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" onclick="clearAllData()">🗑️ ล้างข้อมูลทั้งหมด</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- NOTIFICATION PANEL -->
+    <div class="notification-panel hidden" id="notification-panel">
+      <div class="notif-header">
+        <span>การแจ้งเตือน</span>
+        <button onclick="clearNotifications()">ล้างทั้งหมด</button>
+      </div>
+      <div class="notif-list" id="notif-list">
+        <div class="notif-empty">ไม่มีการแจ้งเตือน</div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content" id="page-content">
+      <!-- Pages are injected here by JS -->
+    </main>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal" id="modal-container" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title"></h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="utils/helpers.js"></script>
+<script src="utils/markdown.js"></script>
+<script src="services/storage-service.js"></script>
+<script src="services/ai-service.js"></script>
+<script src="pages/home.js"></script>
+<script src="pages/chat.js"></script>
+<script src="pages/agents.js"></script>
+<script src="pages/tasks.js"></script>
+<script src="pages/notes.js"></script>
+<script src="pages/prompts.js"></script>
+<script src="pages/knowledge.js"></script>
+<script src="pages/tokens.js"></script>
+<script src="pages/dashboard.js"></script>
+<script src="pages/settings.js"></script>
+<script src="pages/google-services.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
